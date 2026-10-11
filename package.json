@@ -1,0 +1,43 @@
+{
+  "name": "dsh-persona-switch",
+  "version": "0.1.0",
+  "description": "Live persona switcher for DeepSeek Harness: drop-in personas under $DSH_HOME/personas, switch with /persona <name> or the persona_switch tool, no restart.",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./package.json": "./package.json",
+    "./cordis.patch.yml": "./cordis.patch.yml"
+  },
+  "files": [
+    "lib",
+    "personas",
+    "test",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node test/unit.mjs",
+    "capture": "node test/capture-prompt.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "persona",
+    "system-prompt",
+    "cordis"
+  ],
+  "engines": {
+    "node": "^22.19 || >=24"
+  },
+  "license": "MIT"
+}
+

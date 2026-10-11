@@ -1,0 +1,19 @@
+# persona-switch bundle patch layer.
+#
+# One host-side row. It registers:
+#   - a live system-prompt section that reads the active persona on every
+#     assembly, so a switch takes effect on the next turn (no restart)
+#   - the /persona slash command (dsh-commands, available in the TUI and Web)
+#   - the persona_switch tool (dsh-tools)
+#
+# Personas: $DSH_HOME/personas/*.md   (seeded from this package on first run)
+# State:    $DSH_HOME/persona-switch.json
+# Log:      $DSH_HOME/persona-switch.log
+- insert:
+    - id: persona-switch
+      name: dsh-persona-switch
+      config:
+        # Truncate a persona longer than this (bytes). 0 disables the cap.
+        maxPersonaBytes: 400000
+        # Register the model-facing persona_switch tool.
+        tool: true

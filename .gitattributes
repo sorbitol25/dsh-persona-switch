@@ -1,0 +1,12 @@
+* text=auto eol=lf
+*.mjs text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+
+# persona files are plain text; keep them byte-stable so the capture test's
+# "exact match" check keeps passing
+personas/*.md -text
