@@ -117,3 +117,9 @@ Two things worth knowing:
 The token is never written into `.git/config`: `origin` holds the plain HTTPS
 URL and the token is only used inline for the push.
 
+3. **Keep `git add -A` from re-adding the held workflow.** `.github/workflows/test.yml`
+   is listed in `.git/info/exclude` (local-only, never shipped), so the file stays
+   on disk but stays out of commits until the token can write workflows. Without
+   that line the next `git add -A` stages it again and the push is rejected — which
+   is exactly what happened on the second push attempt.
+
