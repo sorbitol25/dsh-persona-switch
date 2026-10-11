@@ -27,34 +27,34 @@ scans for (the official README asks plugin repos to add it):
 dsh-plugin  dsh  deepseek-harness  persona  cordis
 ```
 
-## 3. The author's own personas — **already handled**
+## 3. What ships and what does not
 
-Your personas are yours and they are **not in this repo**, history included.
-The package ships only the neutral seeds (`terse`, `_selftest`); a persona you
-write lives in `$DSH_HOME/personas/` and is never tracked.
+| file | in the repo | notes |
+|---|---|---|
+| `personas/jb.md` | **yes** | the example JB persona |
+| `personas/terse.md`, `personas/_selftest.md` | yes | neutral examples |
+| `personas/jb_full.md` | **no** | 84 KB variant; removed from the tip *and* from every earlier commit on 2026-10-12 (`git filter-branch` + `--force` push) |
 
-Everything below was already done on 2026-10-12 — kept for the record.
-
-`personas/jb.md` was tracked in the first commits. It was removed from the tip
-(`git rm --cached`), from **every earlier commit**
-(`git filter-branch --index-filter 'git rm --cached --ignore-unmatch personas/jb.md personas/jb_full.md'`),
-and pushed with `--force`. The file stayed on disk, and `.gitignore` plus
-`.git/info/exclude` keep `git add -A` from putting it back.
-
-If you ever re-add a persona and want it unpublished again:
+`jb_full.md` is guarded twice so it cannot come back by accident: `.gitignore`
+(tracked, documents the rule) and `.git/info/exclude` (local). If you ever add a
+persona you do **not** want published:
 
 ```sh
 # working tree keeps the file; only the index and history drop it
 git rm --cached personas/<name>.md
 git commit -m "persona: untrack <name>"
 
-# and if it already reached the remote, rewrite + force-push
+# if it already reached the remote, rewrite + force-push
 git filter-branch --force --index-filter \
   "git rm --cached --ignore-unmatch personas/<name>.md" --prune-empty -- --all
 rm -rf .git/refs/original
 git reflog expire --expire=now --all && git gc --prune=now
 git push --force origin main
 ```
+
+> `filter-branch` can drop the file from the **working tree** too. Back the
+> persona up before rewriting (this happened once; the copy in
+> `$DSH_HOME/personas/` saved it).
 
 ## 4. Optional: npm
 

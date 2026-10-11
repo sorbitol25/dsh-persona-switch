@@ -60,7 +60,7 @@ const active = () => tools[0].execute({})
 
 console.log('# roster')
 const list = run('')
-check('lists the shipped seeds', /_selftest/.test(list.text) && /terse/.test(list.text), list.text)
+check('lists the shipped seeds', /_selftest/.test(list.text) && /terse/.test(list.text) && /jb\b/.test(list.text), list.text)
 check('reports off', /persona: off/.test(list.text))
 
 console.log('# switch to a persona')
@@ -87,7 +87,7 @@ console.log('# switch through the model-facing tool')
 r = await tools[0].execute({ name: 'terse' })
 check('tool switched', r.active === 'terse')
 check('tool reports complete=false', r.complete === false)
-check('tool returns a roster', Array.isArray(r.roster) && r.roster.length >= 2)
+check('tool returns a roster', Array.isArray(r.roster) && r.roster.length >= 3)
 check('section followed the tool', /terse systems engineer/.test(sections[0].read()))
 
 console.log('# reload + unknown persona')

@@ -6,8 +6,9 @@
 
 Live persona switching for **DeepSeek Harness** (`dsh`). Switch the system-prompt
 persona from inside a running session — TUI, Web UI, or headless — with no
-restart and no core patch. Ships with the switcher; **your personas stay yours** —
-they live in `$DSH_HOME/personas/` and never enter this repo.
+restart and no core patch. Ships with the switcher plus the example JB persona
+(`jb`); a longer persona variant is deliberately not included and your own
+personas live in `$DSH_HOME/personas/`.
 
 ```
 /persona              show the active persona + the roster
@@ -32,8 +33,8 @@ as the front-matter says:
 | persona | `complete` | agent-turn system message | harness identity |
 |---|---|---|---|
 | `off` | — | **2,823 B** | PRESENT |
-| your own persona (e.g. the author's JB preset) | `true` | **7,989 B** — byte-exact match with the persona file | **absent** |
-| the same persona | `false` | **10,814 B** (= 2,823 merged + 7,989 persona) | PRESENT |
+| `jb` | `true` | **7,989 B** — byte-exact match with `personas/jb.md` | **absent** |
+| `jb` | `false` | **10,814 B** (= 2,823 merged + 7,989 persona) | PRESENT |
 
 25 tool schemas ride along in every case, `thinking` stays enabled, and the
 session-title helper (a separate 363 B request) is untouched.
@@ -108,16 +109,18 @@ Shipped seeds:
 
 | persona | size | complete | what it is |
 |---|---|---|---|
+| `jb` | ~8 KB | yes | the example JB persona |
 | `terse` | 0.5 KB | no | example of a non-complete persona |
 | `_selftest` | 0.3 KB | yes | answers only `BANANA` — proves the wiring |
 
-Those two are the only seeds the package ships. **A persona you write is yours
-alone**: drop a `.md` into `$DSH_HOME/personas/`, run `/persona reload`, and it
-never touches this repository.
+`jb_full` (an 84 KB variant) is **not** in this repo and not in its history —
+it was removed on 2026-10-12 and `.gitignore` / `.git/info/exclude` keep it out.
 
 `complete: true` makes a persona the entire system prompt (see
 [Proof](#proof)); `false` keeps first-party guidance and puts the persona at the
 deployment-persona slot. Optional `suffix:` lands after first-party guidance.
+Your own personas live in `$DSH_HOME/personas/` — drop a `.md` there and run
+`/persona reload`.
 
 ### Adding your own
 

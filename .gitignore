@@ -16,6 +16,7 @@ Thumbs.db
 .vscode/
 
 # ---- personas -----------------------------------------------------------
-# Your own personas are yours: they live in $DSH_HOME/personas/ and are not
-# tracked here. The package ships only the neutral seeds (terse, _selftest).
-personas/jb.md
+# jb.md ships as the example JB persona. jb_full.md does NOT ship: it was
+# removed from the repo and from history on 2026-10-12 and is guarded here so
+# it cannot come back. Your own personas live in $DSH_HOME/personas/.
+personas/jb_full.md
