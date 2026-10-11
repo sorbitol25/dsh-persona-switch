@@ -35,6 +35,15 @@
     "system-prompt",
     "cordis"
   ],
+  "author": "sorbitol25",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sorbitol25/dsh-persona-switch.git"
+  },
+  "homepage": "https://github.com/sorbitol25/dsh-persona-switch#readme",
+  "bugs": {
+    "url": "https://github.com/sorbitol25/dsh-persona-switch/issues"
+  },
   "engines": {
     "node": "^22.19 || >=24"
   },

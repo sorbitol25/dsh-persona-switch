@@ -3,19 +3,11 @@
 Everything below is the difference between "works on my machine" and a repo
 someone else can install in one line.
 
-## 1. Fill the metadata
+## 1. Metadata
 
-`package.json` deliberately omits these — a wrong URL is worse than none:
-
-```json
-"author": "you <you@example.com>",
-"repository": { "type": "git", "url": "git+https://github.com/<you>/dsh-persona-switch.git" },
-"homepage": "https://github.com/<you>/dsh-persona-switch#readme",
-"bugs": { "url": "https://github.com/<you>/dsh-persona-switch/issues" }
-```
-
-`LICENSE` says `Copyright (c) 2026 sorbi` — change it if that is not the name
-you want on it.
+Already filled in for `sorbitol25/dsh-persona-switch` (`author`, `repository`,
+`homepage`, `bugs`). If you publish under a different account, change those four
+fields plus the copyright line in `LICENSE`.
 
 ## 2. Push
 
