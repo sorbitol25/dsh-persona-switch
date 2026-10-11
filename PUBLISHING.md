@@ -27,11 +27,10 @@ scans for (the official README asks plugin repos to add it):
 dsh-plugin  dsh  deepseek-harness  persona  cordis
 ```
 
-## 3. Decide about the JB seeds — **the one real judgement call**
+## 3. Decide about the JB seed — **the one real judgement call**
 
-`personas/jb.md` (8 KB) and `personas/jb_full.md` (84 KB) are jailbreak personas.
-They are in the repo because that is the point of this build: install, then
-`/persona jb`.
+`personas/jb.md` (8 KB) is a jailbreak persona. It is in the repo because that
+is the point of this build: install, then `/persona jb`.
 
 Shipping them means:
 
@@ -41,10 +40,10 @@ Shipping them means:
   persona, including ones you never publish.
 
 Publish the neutral variant instead (mechanism + `terse` + `_selftest`, JB stays
-local): uncomment the two lines at the bottom of `.gitignore`, then
+local): uncomment the line at the bottom of `.gitignore`, then
 
 ```sh
-git rm --cached personas/jb.md personas/jb_full.md
+git rm --cached personas/jb.md
 ```
 
 Either way `$DSH_HOME/personas/` is seeded only on first run, so users add their

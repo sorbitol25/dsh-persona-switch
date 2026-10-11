@@ -12,8 +12,8 @@ Added
 - `persona_switch` tool, so the agent can switch itself on request.
 - Persona files: `$DSH_HOME/personas/*.md` with `title` / `complete` / `suffix`
   front-matter; seeded from the package on first run.
-- Seeds: `jb` (persona slim2), `jb_full` (persona v13), `terse` (example of
-  `complete: false`), `_selftest` (answers only `BANANA`).
+- Seeds: `jb` (persona slim2), `terse` (example of `complete: false`),
+  `_selftest` (answers only `BANANA`).
 - `test/unit.mjs` — 26 assertions against a fake Cordis context, no model calls.
 - `test/capture-prompt.mjs` — mock Anthropic-Messages/OpenAI endpoint that
   proves what the system message actually contains, with a `--persona` switch.

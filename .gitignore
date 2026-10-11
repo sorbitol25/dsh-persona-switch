@@ -15,10 +15,9 @@ Thumbs.db
 .idea/
 .vscode/
 
-# ---- ship the JB seeds? -------------------------------------------------
-# The repo ships personas/jb.md and personas/jb_full.md on purpose: that is
-# what makes this a JB-ready persona switcher. If you would rather publish
-# only the neutral seeds, uncomment the two lines below and commit the change
-# (the files stay on disk, they just stop being tracked).
+# ---- ship the JB seed? --------------------------------------------------
+# The repo ships personas/jb.md on purpose: that is what makes this a
+# JB-ready persona switcher. If you would rather publish only the neutral
+# seeds, uncomment the line below and commit the change (the file stays on
+# disk, it just stops being tracked).
 # personas/jb.md
-# personas/jb_full.md

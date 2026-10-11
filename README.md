@@ -12,7 +12,6 @@ restart and no core patch. Ships with the JB personas from this workspace.
 /persona              show the active persona + the roster
 /persona list         same
 /persona jb           switch  (name = personas/<name>.md)
-/persona jb_full      switch
 /persona off          stop overriding the system prompt
 /persona reload       re-read the persona directory (after editing a file)
 /persona complete on|off|auto
@@ -109,15 +108,14 @@ Shipped seeds:
 | persona | size | complete | what it is |
 |---|---|---|---|
 | `jb` | ~8 KB | yes | JB core — the slim persona (persona slim2) |
-| `jb_full` | ~84 KB | yes | JB full — the long persona (persona v13) |
 | `terse` | 0.5 KB | no | example of a non-complete persona |
 | `_selftest` | 0.3 KB | yes | answers only `BANANA` — proves the wiring |
 
-Both JB seeds carry `complete: true`, the recipe that made the persona *be* the
-system prompt in the build they came from. If tool use degrades under a persona,
+The JB seed carries `complete: true`, the recipe that made the persona *be* the
+system prompt in the build it came from. If tool use degrades under a persona,
 run `/persona complete off` — that keeps the persona and restores first-party
 guidance (see the table under [Proof](#proof) for the measured difference).
-`PUBLISHING.md` covers whether you want those two seeds in a public repo.
+`PUBLISHING.md` covers whether you want that seed in a public repo.
 
 ### Adding your own
 
