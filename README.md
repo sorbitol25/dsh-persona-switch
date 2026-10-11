@@ -6,7 +6,7 @@
 
 Live persona switching for **DeepSeek Harness** (`dsh`). Switch the system-prompt
 persona from inside a running session — TUI, Web UI, or headless — with no
-restart and no core patch. Ships with the JB personas from this workspace.
+restart and no core patch. Ships with a JB persona.
 
 ```
 /persona              show the active persona + the roster
@@ -107,7 +107,7 @@ Shipped seeds:
 
 | persona | size | complete | what it is |
 |---|---|---|---|
-| `jb` | ~8 KB | yes | JB core — the slim persona (persona slim2) |
+| `jb` | ~8 KB | yes | JB core — the slim persona |
 | `terse` | 0.5 KB | no | example of a non-complete persona |
 | `_selftest` | 0.3 KB | yes | answers only `BANANA` — proves the wiring |
 
