@@ -80,3 +80,41 @@ Re-verify before tagging a release:
 node test/unit.mjs                                  # 26 assertions, no network
 node test/capture-prompt.mjs --persona _selftest    # system message == persona
 ```
+
+## 6. What actually happened here (2026-10-12)
+
+Pushed as a **private** repo with `publish-to-github.ps1 -Private`:
+
+```
+repo      : sorbitol25/dsh-persona-switch
+private   : true
+default   : main
+topics    : cordis, deepseek-harness, dsh, dsh-plugin, persona
+commits   : 3
+files     : 15
+```
+
+Two things worth knowing:
+
+1. **A classic PAT without the `workflow` scope cannot push
+   `.github/workflows/*.yml`** — GitHub rejects the *entire* push, not just that
+   file. `publish-to-github.ps1` detects the rejection, holds the workflow file
+   (`git rm --cached`, body kept on disk under `.github/`), and pushes the rest.
+   To turn CI on later: add the `workflow` scope to the token at
+   <https://github.com/settings/tokens>, then
+
+   ```sh
+   git add .github/workflows/test.yml
+   git commit -m "ci: enable tests"
+   git push
+   ```
+
+2. **Private → public** needs no CLI. Either
+   `PATCH /repos/sorbitol25/dsh-persona-switch {"private": false}` or
+   Settings → General → Danger Zone → Change visibility. Remember that going
+   public also publishes the JB seeds unless you run `-Variant neutral` first
+   (see §3).
+
+The token is never written into `.git/config`: `origin` holds the plain HTTPS
+URL and the token is only used inline for the push.
+
