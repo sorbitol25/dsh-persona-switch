@@ -8,7 +8,7 @@
  *
  * DSH_HOME is pointed at a throwaway directory so the live state is untouched.
  */
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -60,7 +60,7 @@ const active = () => tools[0].execute({})
 
 console.log('# roster')
 const list = run('')
-check('lists the seeded personas', /jb\b/.test(list.text) && /_selftest/.test(list.text) && /terse/.test(list.text), list.text)
+check('lists the shipped seeds', /_selftest/.test(list.text) && /terse/.test(list.text), list.text)
 check('reports off', /persona: off/.test(list.text))
 
 console.log('# switch to a persona')
@@ -87,7 +87,7 @@ console.log('# switch through the model-facing tool')
 r = await tools[0].execute({ name: 'terse' })
 check('tool switched', r.active === 'terse')
 check('tool reports complete=false', r.complete === false)
-check('tool returns a roster', Array.isArray(r.roster) && r.roster.length >= 3)
+check('tool returns a roster', Array.isArray(r.roster) && r.roster.length >= 2)
 check('section followed the tool', /terse systems engineer/.test(sections[0].read()))
 
 console.log('# reload + unknown persona')
@@ -95,6 +95,15 @@ run('reload')
 r = run('does-not-exist')
 check('unknown persona is an error', r.kind === 'error', JSON.stringify(r))
 check('active unchanged after the error', (await tools[0].execute({})).active === 'terse')
+
+console.log('# bring your own persona (the documented path)')
+writeFileSync(join(home, 'personas', 'mine.md'), '---\ntitle: my own persona\ncomplete: false\n---\n\nAnswer only in haiku.\n')
+run('reload')
+const afterReload = run('mine')
+check('reload picks up a hand-dropped file', /mine/.test(afterReload.text), afterReload.text)
+check('switch to it', /persona: mine/.test(afterReload.text))
+check('not complete', /complete=false/.test(afterReload.text))
+check('section text is the new persona', /haiku/.test(sections[0].read()))
 
 console.log('# off')
 r = run('off')

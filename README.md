@@ -6,7 +6,8 @@
 
 Live persona switching for **DeepSeek Harness** (`dsh`). Switch the system-prompt
 persona from inside a running session — TUI, Web UI, or headless — with no
-restart and no core patch. Ships with a JB persona.
+restart and no core patch. Ships with the switcher; **your personas stay yours** —
+they live in `$DSH_HOME/personas/` and never enter this repo.
 
 ```
 /persona              show the active persona + the roster
@@ -31,8 +32,8 @@ as the front-matter says:
 | persona | `complete` | agent-turn system message | harness identity |
 |---|---|---|---|
 | `off` | — | **2,823 B** | PRESENT |
-| `jb` | `true` | **7,989 B** — byte-exact match with `personas/jb.md` | **absent** |
-| `jb` | `false` | **10,814 B** (= 2,823 merged + 7,989 persona) | PRESENT |
+| your own persona (e.g. the author's JB preset) | `true` | **7,989 B** — byte-exact match with the persona file | **absent** |
+| the same persona | `false` | **10,814 B** (= 2,823 merged + 7,989 persona) | PRESENT |
 
 25 tool schemas ride along in every case, `thinking` stays enabled, and the
 session-title helper (a separate 363 B request) is untouched.
@@ -107,15 +108,16 @@ Shipped seeds:
 
 | persona | size | complete | what it is |
 |---|---|---|---|
-| `jb` | ~8 KB | yes | JB core — the slim persona |
 | `terse` | 0.5 KB | no | example of a non-complete persona |
 | `_selftest` | 0.3 KB | yes | answers only `BANANA` — proves the wiring |
 
-The JB seed carries `complete: true`, the recipe that made the persona *be* the
-system prompt in the build it came from. If tool use degrades under a persona,
-run `/persona complete off` — that keeps the persona and restores first-party
-guidance (see the table under [Proof](#proof) for the measured difference).
-`PUBLISHING.md` covers whether you want that seed in a public repo.
+Those two are the only seeds the package ships. **A persona you write is yours
+alone**: drop a `.md` into `$DSH_HOME/personas/`, run `/persona reload`, and it
+never touches this repository.
+
+`complete: true` makes a persona the entire system prompt (see
+[Proof](#proof)); `false` keeps first-party guidance and puts the persona at the
+deployment-persona slot. Optional `suffix:` lands after first-party guidance.
 
 ### Adding your own
 

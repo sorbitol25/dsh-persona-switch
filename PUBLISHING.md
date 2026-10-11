@@ -27,27 +27,34 @@ scans for (the official README asks plugin repos to add it):
 dsh-plugin  dsh  deepseek-harness  persona  cordis
 ```
 
-## 3. Decide about the JB seed — **the one real judgement call**
+## 3. The author's own personas — **already handled**
 
-`personas/jb.md` (8 KB) is a jailbreak persona. It is in the repo because that
-is the point of this build: install, then `/persona jb`.
+Your personas are yours and they are **not in this repo**, history included.
+The package ships only the neutral seeds (`terse`, `_selftest`); a persona you
+write lives in `$DSH_HOME/personas/` and is never tracked.
 
-Shipping them means:
+Everything below was already done on 2026-10-12 — kept for the record.
 
-- the repo is a **jailbreak persona pack** as much as a plugin, so expect
-  reports, and read GitHub's terms for your own jurisdiction before pushing;
-- they are also the *content*, not the mechanism — the switcher works with any
-  persona, including ones you never publish.
+`personas/jb.md` was tracked in the first commits. It was removed from the tip
+(`git rm --cached`), from **every earlier commit**
+(`git filter-branch --index-filter 'git rm --cached --ignore-unmatch personas/jb.md personas/jb_full.md'`),
+and pushed with `--force`. The file stayed on disk, and `.gitignore` plus
+`.git/info/exclude` keep `git add -A` from putting it back.
 
-Publish the neutral variant instead (mechanism + `terse` + `_selftest`, JB stays
-local): uncomment the line at the bottom of `.gitignore`, then
+If you ever re-add a persona and want it unpublished again:
 
 ```sh
-git rm --cached personas/jb.md
-```
+# working tree keeps the file; only the index and history drop it
+git rm --cached personas/<name>.md
+git commit -m "persona: untrack <name>"
 
-Either way `$DSH_HOME/personas/` is seeded only on first run, so users add their
-own personas by dropping a `.md` file and running `/persona reload`.
+# and if it already reached the remote, rewrite + force-push
+git filter-branch --force --index-filter \
+  "git rm --cached --ignore-unmatch personas/<name>.md" --prune-empty -- --all
+rm -rf .git/refs/original
+git reflog expire --expire=now --all && git gc --prune=now
+git push --force origin main
+```
 
 ## 4. Optional: npm
 
