@@ -104,8 +104,8 @@ re-run the script.
 **Upgrade / uninstall**
 
 ```powershell
-dsh plugin --profile web add dsh-persona-switch@latest   # upgrade
-dsh plugin --profile web remove dsh-persona-switch       # uninstall
+dsh plugin --profile web add dsh-persona-switch@0.1.2    # upgrade (pin: pnpm can serve a stale packument)
+dsh plugin --profile web remove dsh-persona-switch        # uninstall
 ```
 
 Uninstalling leaves `$DSH_HOME/personas/*.md` alone (your files, not the
@@ -184,7 +184,7 @@ dsh headless "..."        # runs under jb
 ## Test
 
 ```powershell
-npm test                                  # node test/unit.mjs — 26 assertions, no network
+npm test                                  # node test/unit.mjs — 30 assertions, no network
 node test/capture-prompt.mjs --persona _selftest    # proves the system message
 node test/capture-prompt.mjs --persona off          # and the stock prompt, for contrast
 ```
@@ -221,5 +221,6 @@ $ node test/capture-prompt.mjs --persona _selftest "What is 1+1?"
 - The DeepSeek route speaks Anthropic Messages (`POST /v1/messages`) with
   `thinking` enabled and `output_config.effort` set per model route; the
   plugin does not touch either.
-- Releasing this? Read [`PUBLISHING.md`](PUBLISHING.md) first — it lists the
-  metadata to fill in and the call to make about the two JB seeds.
+- **Released**: the repo is public and `dsh-persona-switch@0.1.2` is on npm. For the next
+  release see [`PUBLISHING.md`](PUBLISHING.md) — §0 is the current state and §3 records the
+  JB-seed call (made 2026-10-12, `jb.md` ships / `jb_full.md` never).

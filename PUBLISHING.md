@@ -99,7 +99,7 @@ git push --force origin main
 ## 4. npm publish — the delivery path
 
 The name is free (`https://registry.npmjs.org/dsh-persona-switch` → **404**) and the
-tarball is already limited by `files` (11 files, 17 kB unpacked 47 kB).
+tarball is already limited by `files` (15 files, 28.7 kB / 79.7 kB unpacked).
 `prepublishOnly` runs the unit tests, so a red test cannot be published.
 
 One-time setup:
@@ -191,7 +191,7 @@ dsh plugin --profile headless add dsh-persona-switch
 (`profile "desktop" is managed exclusively by the Electron application`), so use:
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1 -Version 0.1.0
+powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1 -Version 0.1.2
 ```
 
 It writes the dep + bundle into `~/.dsh/profiles/desktop/package.json` (BOM-less),
@@ -204,7 +204,7 @@ through a throwaway profile clone. Quit the app fully (tray too) afterwards.
 - [ ] `npm test` → 30/30
 - [ ] `node test/capture-prompt.mjs --persona jb` → agent-turn system message is
       byte-exact `personas/jb.md` and the harness identity is **absent**
-- [ ] `npm pack --dry-run` → 11 files, no `jb_full.md`, no `.git`
+- [ ] `npm pack --dry-run` → 15 files, no `jb_full.md`, no `.git`
 - [ ] published; `npm view dsh-persona-switch version` matches
 - [ ] a clean profile installs by name: `dsh plugin --profile <new> add dsh-persona-switch`
 - [ ] desktop: `scripts/install-desktop.ps1 -Version <version>`, restart, `/` lists `persona`
@@ -242,11 +242,11 @@ ships `0.2.0-rc.2`. Importing nothing keeps the plugin installable across the
 Re-verify before tagging a release:
 
 ```sh
-node test/unit.mjs                                  # 26 assertions, no network
+node test/unit.mjs                                  # 30 assertions, no network
 node test/capture-prompt.mjs --persona _selftest    # system message == persona
 ```
 
-## 6. What actually happened here (2026-10-12)
+## 6. What actually happened here (2026-10-12; the repo became **public** on 2026-10-17)
 
 Pushed as a **private** repo with `publish-to-github.ps1 -Private`:
 

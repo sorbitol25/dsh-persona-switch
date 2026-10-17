@@ -63,7 +63,7 @@ Added
   front-matter; seeded from the package on first run.
 - Seeds: `jb` (persona slim2), `terse` (example of `complete: false`),
   `_selftest` (answers only `BANANA`).
-- `test/unit.mjs` — 26 assertions against a fake Cordis context, no model calls.
+- `test/unit.mjs` — 30 assertions against a fake Cordis context, no model calls.
 - `test/capture-prompt.mjs` — mock Anthropic-Messages/OpenAI endpoint that
   proves what the system message actually contains, with a `--persona` switch.
 

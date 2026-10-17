@@ -5,7 +5,7 @@
 # so this script does what `dsh plugin add` would do, by hand, and then verifies the composition.
 #
 #   powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1
-#   powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1 -Version 0.1.0   # dep as ^0.1.0 (npm)
+#   powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1 -Version 0.1.2   # dep as ^0.1.2 (npm)
 #
 # Quit the app completely (tray included) before starting it again.
 param(

@@ -7,6 +7,7 @@
  *
  *   node test/capture-prompt.mjs --persona jb "say hi"
  *   node test/capture-prompt.mjs --persona off "say hi"
+ *   node test/capture-prompt.mjs --persona jb --complete off "say hi"   # override the front-matter
  *
  * The mock answers in the protocol the request arrived in, so `dsh` exits
  * cleanly and the run costs no tokens. Full bodies: DSH_CAPTURE_DIR=<dir>.
@@ -31,14 +32,23 @@ const REPLY = 'MOCK-REPLY'
 const HARNESS_IDENTITY = 'You are an AI agent powered by DeepSeek Harness.'
 
 const argv = process.argv.slice(2)
-const pFlag = argv.indexOf('--persona')
-const persona = pFlag >= 0 ? argv[pFlag + 1] : null
-const task = argv.filter((a, i) => !a.startsWith('--') && i !== pFlag + 1).join(' ') || 'say hi'
+const flag = (name) => {
+  const i = argv.indexOf(name)
+  return i >= 0 ? argv[i + 1] : null
+}
+const persona = flag('--persona')
+const completeArg = flag('--complete') // 'on' | 'off' | null (null = trust the front-matter)
+const task = argv
+  .filter((a, i) => !a.startsWith('--') && a !== persona && a !== completeArg)
+  .join(' ') || 'say hi'
 
 if (persona !== null) {
   mkdirSync(DSH_HOME, { recursive: true })
-  writeFileSync(STATE_FILE, `${JSON.stringify({ active: persona === 'off' ? '' : persona }, null, 1)}\n`)
-  console.log(`# switched persona -> ${persona}`)
+  const state = { active: persona === 'off' ? '' : persona }
+  if (completeArg === 'on') state.complete = true
+  if (completeArg === 'off') state.complete = false
+  writeFileSync(STATE_FILE, `${JSON.stringify(state, null, 1)}\n`)
+  console.log(`# switched persona -> ${persona}${completeArg ? ` (complete=${completeArg})` : ''}`)
 }
 
 const seen = []
