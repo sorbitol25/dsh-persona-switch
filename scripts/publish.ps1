@@ -7,7 +7,9 @@
 # version in package.json not already on the registry.
 param(
   [switch]$DryRun,
-  [string]$Tag = 'latest'
+  [string]$Tag = 'latest',
+  # 2FA accounts: the web-login token cannot publish (403). Pass the 6-digit authenticator code.
+  [string]$Otp
 )
 $ErrorActionPreference = 'Continue'   # native stderr becomes ErrorRecords; we check $LASTEXITCODE instead
 $root = Split-Path $PSScriptRoot -Parent
@@ -51,11 +53,32 @@ try {
   # 6. publish
   if ($DryRun) {
     npm publish --access public --tag $Tag --dry-run
+    if ($LASTEXITCODE -ne 0) { "`npublish   FAILED (exit $LASTEXITCODE)"; exit 1 }
     "`n(dry run: nothing uploaded)"
   } else {
-    npm publish --access public --tag $Tag
+    if ($Otp) { npm publish --access public --tag $Tag --otp $Otp } else { npm publish --access public --tag $Tag }
+    $publishExit = $LASTEXITCODE
+
+    # 2FA accounts: the interactive login token cannot publish (403). Ask once for the code.
+    if ($publishExit -ne 0 -and -not $Otp) {
+      $code = Read-Host "publish   got 403 (2FA). Enter the 6-digit authenticator code (blank to abort)"
+      if ($code) {
+        npm publish --access public --tag $Tag --otp $code.Trim()
+        $publishExit = $LASTEXITCODE
+      }
+    }
+
+    # 7. the registry is the source of truth, not the exit code: a 403 (2FA) must not tag a release
+    $live = (& npm view "$name@$version" version 2>$null | Out-String).Trim()
+    if ($publishExit -ne 0 -or $live -ne $version) {
+      "`npublish   FAILED (exit $publishExit, registry says '$live')"
+      "          nothing was tagged. Fix the cause and re-run:"
+      "          403 ... 2FA is required  ->  scripts\publish.ps1 -Otp <6 digits>"
+      "          or use a granular access token with 'bypass 2FA' in %USERPROFILE%\.npmrc"
+      exit 1
+    }
     npm view $name version dist.tarball time.modified
-    git tag "v$version"
+    if (-not (git tag --list "v$version")) { git tag "v$version" }
     git push origin "v$version"
     "tagged    v$version"
   }

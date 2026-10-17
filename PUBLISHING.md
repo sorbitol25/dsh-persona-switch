@@ -91,6 +91,35 @@ npm view dsh-persona-switch version dist.tarball time.modified
 git tag v0.1.0 && git push --tags
 ```
 
+### 2FA accounts — the 403 you get first
+
+`npm login` in a browser hands you an *interactive* token. With 2FA enabled,
+`npm publish` answers:
+
+```
+npm error code E403
+npm error 403 Forbidden - PUT https://registry.npmjs.org/<pkg> - Two-factor
+authentication or granular access token with bypass 2fa enabled is required to publish packages.
+```
+
+That is npm's documented rule: publishing needs **either** 2FA **or** a granular
+access token with *bypass 2FA*. Three ways through:
+
+1. **OTP per publish** (nothing stored) — `scripts\publish.ps1 -Otp 123456`, or just
+   run the script and it prompts once after the 403 and retries.
+2. **Granular token with bypass 2FA** — npmjs.com → Access Tokens → Generate New →
+   Granular → enable *bypass 2FA* → Read and write → put
+   `//registry.npmjs.org/:_authToken=npm_…` in `%USERPROFILE%\.npmrc`.
+   npm is restricting bypass-2FA tokens for account changes; they are still the
+   documented route for publishing, but do not lean on them long-term.
+3. **Trusted publishing (OIDC)** from GitHub Actions — no token, provenance included.
+   Needs npm CLI ≥ 11.21, a cloud-hosted runner, and the package to exist already
+   (the trusted-publisher config lives on the package's settings page), so the
+   **first** publish is manual and later ones can be automated.
+
+A 403 must never leave a release tag behind: `publish.ps1` now confirms the version
+on the registry **before** `git tag` / `git push`.
+
 After that, installing is one line per profile — and `dsh plugin add` appends the
 bundle entry itself, because the package declares `dsh.bundle.patch`:
 
