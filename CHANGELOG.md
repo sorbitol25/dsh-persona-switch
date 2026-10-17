@@ -1,8 +1,14 @@
 # Changelog
 
-## 0.1.1 — 2026-10-17
+## 0.1.2 — 2026-10-17
 
 Docs and packaging only — `lib/index.js` is byte-identical to 0.1.0.
+
+> **0.1.1 never existed on the registry.** That number was staged by an `npm publish`
+> whose shell was killed while the upload was in flight; every later publish of 0.1.1
+> answered `409 Cannot publish over previously staged version "0.1.1"`, while
+> `npm stage list` reported no staged versions. 0.1.2 is the same content under a
+> clean number.
 
 - The repository is **public**: <https://github.com/sorbitol25/dsh-persona-switch>
   (`homepage` on npm points there; topics: dsh-plugin, dsh, deepseek-harness, persona, cordis, system-prompt).

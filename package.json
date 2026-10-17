@@ -1,6 +1,6 @@
 {
   "name": "dsh-persona-switch",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Live persona switcher for DeepSeek Harness: drop-in personas under $DSH_HOME/personas, switch with /persona <name> or the persona_switch tool, no restart.",
   "type": "module",
   "main": "lib/index.js",
