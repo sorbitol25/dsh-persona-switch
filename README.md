@@ -223,6 +223,7 @@ $ node test/capture-prompt.mjs --persona _selftest "What is 1+1?"
 - The DeepSeek route speaks Anthropic Messages (`POST /v1/messages`) with
   `thinking` enabled and `output_config.effort` set per model route; the
   plugin does not touch either.
-- **Released**: the repo is public and `dsh-persona-switch@0.1.2` is on npm. For the next
-  release see [`PUBLISHING.md`](PUBLISHING.md) — §0 is the current state and §3 records the
-  JB-seed call (made 2026-10-12, `jb.md` ships / `jb_full.md` never).
+- **Released**: the repo is public and the package is on npm (`npm view dsh-persona-switch
+  version` for the current one). For the next release see [`PUBLISHING.md`](PUBLISHING.md) —
+  §0 is the current state and §3 records the JB-seed call (made 2026-10-12, `jb.md` ships /
+  `jb_full.md` never).
