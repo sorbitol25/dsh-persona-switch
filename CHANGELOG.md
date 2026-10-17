@@ -1,8 +1,29 @@
 # Changelog
 
-## 0.1.0 — 2026-10-12
+## 0.1.0 — 2026-10-17 (first public release)
 
-First release. Verified against **dsh 0.2.0-rc.2** (node 24.18.1, pnpm 12.8.1).
+Verified against **dsh 0.2.0-rc.2** (node 24.18.1, pnpm 12.8.1) and the runtime
+inside **DeepSeek Harness Desktop 0.2.1-rc.1**. `@deepseek-ai/dsh-commands` is
+byte-identical between those two (`lib/index.js`, 20,129 B, SHA256
+`88909A0915E4E3B2…`), so the `commands.register` / `input.hint` surface this
+plugin uses is unchanged.
+
+Added
+
+- One prompt section whose `text` is a provider, so the active persona is read
+  at every assembly: switching takes effect on the next turn with no restart.
+- `/persona` command — `list`, `<name>`, `off`, `reload`, `complete on|off|auto`.
+- `persona_switch` tool, so the agent can switch itself on request.
+- Persona files: `$DSH_HOME/personas/*.md` with `title` / `complete` / `suffix`
+  front-matter; seeded from the package on first run.
+- Seeds: `jb` (persona slim2), `terse` (example of `complete: false`),
+  `_selftest` (answers only `BANANA`).
+- `test/unit.mjs` — 30 assertions against a fake Cordis context, no model calls.
+- `test/capture-prompt.mjs` — mock Anthropic-Messages/OpenAI endpoint that
+  proves what the system message actually contains, with a `--persona` switch.
+- `scripts/install-desktop.ps1` — install into the Electron app's reserved
+  `desktop` profile (the CLI refuses it), with clone-based verification and
+  `-Version` for registry builds.
 
 Added
 

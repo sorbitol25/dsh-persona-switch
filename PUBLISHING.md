@@ -56,20 +56,60 @@ git push --force origin main
 > persona up before rewriting (this happened once; the copy in
 > `$DSH_HOME/personas/` saved it).
 
-## 4. Optional: npm
+## 4. npm publish — the delivery path
 
-The package is publishable as-is (`files` already limits the tarball). If you
-publish, the plugin can be installed by name:
+The name is free (`https://registry.npmjs.org/dsh-persona-switch` → **404**) and the
+tarball is already limited by `files` (11 files, 17 kB unpacked 47 kB).
+`prepublishOnly` runs the unit tests, so a red test cannot be published.
 
-```sh
-dsh plugin --profile web add dsh-persona-switch
-```
-
-Check what would ship first:
+One-time setup:
 
 ```sh
-npm pack --dry-run
+npm login          # browser + OTP; then:
+npm whoami         # must print your npm username
 ```
+
+Every release:
+
+```sh
+cd persona-switch
+npm test                       # 30 assertions, no network
+npm pack --dry-run             # confirm: no .git, no jb_full.md, no scripts/
+npm publish --access public    # publishConfig already says public
+npm view dsh-persona-switch version dist.tarball time.modified
+git tag v0.1.0 && git push --tags
+```
+
+After that, installing is one line per profile — and `dsh plugin add` appends the
+bundle entry itself, because the package declares `dsh.bundle.patch`:
+
+```sh
+dsh plugin --profile web      add dsh-persona-switch
+dsh plugin --profile dsh-tui  add dsh-persona-switch
+dsh plugin --profile headless add dsh-persona-switch
+```
+
+**The desktop app is the one exception.** `dsh plugin --profile desktop …` refuses
+(`profile "desktop" is managed exclusively by the Electron application`), so use:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1 -Version 0.1.0
+```
+
+It writes the dep + bundle into `~/.dsh/profiles/desktop/package.json` (BOM-less),
+copies the package into that profile's `node_modules`, and verifies the composition
+through a throwaway profile clone. Quit the app fully (tray too) afterwards.
+
+### Release checklist
+
+- [ ] version bumped in `package.json` + a CHANGELOG entry
+- [ ] `npm test` → 30/30
+- [ ] `node test/capture-prompt.mjs --persona jb` → agent-turn system message is
+      byte-exact `personas/jb.md` and the harness identity is **absent**
+- [ ] `npm pack --dry-run` → 11 files, no `jb_full.md`, no `.git`
+- [ ] published; `npm view dsh-persona-switch version` matches
+- [ ] a clean profile installs by name: `dsh plugin --profile <new> add dsh-persona-switch`
+- [ ] desktop: `scripts/install-desktop.ps1 -Version <version>`, restart, `/` lists `persona`
 
 ## 5. Version compatibility
 

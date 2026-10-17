@@ -2,7 +2,7 @@
 
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![license MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![verified dsh 0.2.0-rc.2](https://img.shields.io/badge/verified%20against-dsh%200.2.0--rc.2-informational)](#proof)
+[![verified dsh 0.2.0-rc.2 + 0.2.1-rc.1](https://img.shields.io/badge/verified%20against-dsh%200.2.0--rc.2%20%2F%200.2.1--rc.1-informational)](#proof)
 
 Live persona switching for **DeepSeek Harness** (`dsh`). Switch the system-prompt
 persona from inside a running session — TUI, Web UI, or headless — with no
@@ -66,23 +66,48 @@ Switching disposes and re-registers that section, which emits
 
 ## Install
 
-From a checkout of this repo:
+**From npm** (one line per profile — each dsh profile is a separate install):
 
 ```powershell
-dsh plugin --profile dsh-tui  add file:C:/path/to/dsh-persona-switch
-dsh plugin --profile web      add file:C:/path/to/dsh-persona-switch
-dsh plugin --profile headless add file:C:/path/to/dsh-persona-switch   # for scripting
+dsh plugin --profile web      add dsh-persona-switch
+dsh plugin --profile dsh-tui  add dsh-persona-switch
+dsh plugin --profile headless add dsh-persona-switch   # for scripting
 ```
 
-After `npm publish`, by name:
+Restart that profile (or just start it) and `/persona` is there. Nothing else to
+configure — the package declares `dsh.bundle.patch`, so `dsh plugin add` also
+appends it to `dsh.profile.bundles` for you.
+
+**From a checkout** (development — a `file:` dependency is a symlink, so edits
+take effect on the next `dsh` start, no reinstall):
 
 ```powershell
-dsh plugin --profile dsh-tui add dsh-persona-switch
+dsh plugin --profile web add file:C:/path/to/dsh-persona-switch
 ```
 
-A `file:` dependency is a **symlink**, so editing this directory takes effect on
-the next `dsh` start — no reinstall. (Profiles are separate: a plugin added to
-`web` does *not* exist in `dsh-tui` or `headless`.)
+**Desktop app (Electron).** Its `desktop` profile is *reserved*: `dsh plugin
+--profile desktop …` refuses with `profile "desktop" is managed exclusively by
+the Electron application`. Install it by hand (or run `scripts/install-desktop.ps1`,
+which does exactly this and verifies the result):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/install-desktop.ps1
+```
+
+then **quit the app completely (tray included) and start it again**. The `/`
+menu now lists `persona`; `/persona <name>` runs host-side (no model turn, no
+tokens). If an app update rewrites `~/.dsh/profiles/desktop/package.json`,
+re-run the script.
+
+**Upgrade / uninstall**
+
+```powershell
+dsh plugin --profile web add dsh-persona-switch@latest   # upgrade
+dsh plugin --profile web remove dsh-persona-switch       # uninstall
+```
+
+Uninstalling leaves `$DSH_HOME/personas/*.md` alone (your files, not the
+package's).
 
 ## Personas
 

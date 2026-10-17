@@ -12,15 +12,21 @@
   "files": [
     "lib",
     "personas",
+    "scripts",
     "test",
     "cordis.patch.yml",
     "README.md",
     "CHANGELOG.md",
+    "PUBLISHING.md",
     "LICENSE"
   ],
   "scripts": {
     "test": "node test/unit.mjs",
-    "capture": "node test/capture-prompt.mjs"
+    "capture": "node test/capture-prompt.mjs",
+    "prepublishOnly": "node test/unit.mjs"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dsh": {
     "bundle": {
