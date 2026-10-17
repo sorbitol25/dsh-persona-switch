@@ -3,13 +3,38 @@
 Everything below is the difference between "works on my machine" and a repo
 someone else can install in one line.
 
-## 1. Metadata
+## 0. Current state (2026-10-17) — there is nothing left to decide
 
-Already filled in for `sorbitol25/dsh-persona-switch` (`author`, `repository`,
-`homepage`, `bugs`). If you publish under a different account, change those four
-fields plus the copyright line in `LICENSE`.
+| what | state |
+|---|---|
+| repository | **public** — <https://github.com/sorbitol25/dsh-persona-switch> (topics: cordis, deepseek-harness, dsh, dsh-plugin, persona, system-prompt) |
+| npm | **`dsh-persona-switch@0.1.2` is `latest`** (0.1.0 and 0.1.2 exist; **0.1.1 is a gap** — see CHANGELOG) |
+| releases | tags `v0.1.0`, `v0.1.2` pushed |
+| install | `dsh plugin --profile <p> add dsh-persona-switch@0.1.2` |
+| CI | **not enabled**: the classic PAT has `repo` only, and GitHub rejects the push with `without 'workflow' scope`. The workflow file stays local (`.github/` is in `.git/info/exclude`) |
+| next release | bump `version` → `scripts/publish.ps1` (tests → tarball check → publish → poll → tag → push) |
 
-## 2. Push
+So: **this doc is now a runbook for the next release, not a pre-flight checklist.**
+The two questions it used to raise — metadata, and which JB seeds ship — are both
+answered and executed (§1, §3).
+
+## 1. Metadata — filled in, and here is what each field points at
+
+| field | value | note |
+|---|---|---|
+| `name` | `dsh-persona-switch` | unscoped; the name is owned by `sorbitol49` on npm |
+| `author` | `sorbitol25` | GitHub handle |
+| `repository` | `git+https://github.com/sorbitol25/dsh-persona-switch.git` | public |
+| `homepage` (package.json) | the GitHub README | what npm shows as "Homepage" |
+| `homepage` (GitHub repo) | `https://www.npmjs.com/package/dsh-persona-switch` | set via `PATCH /repos/…` |
+| `bugs` | the GitHub issues | issues are enabled |
+| `license` | MIT | `LICENSE` © 2026 sorbitol25 |
+
+Publishing under a different account means changing `author`, `repository`,
+`homepage`, `bugs`, the copyright line in `LICENSE`, and the npm `name` (or
+scoping it as `@you/dsh-persona-switch`).
+
+## 2. Push (done 2026-10-12; kept for a fork)
 
 ```sh
 git init
@@ -20,20 +45,35 @@ git remote add origin https://github.com/<you>/dsh-persona-switch.git
 git push -u origin main
 ```
 
-Then set the GitHub topics — `dsh-plugin` is the one the Harness ecosystem
-scans for (the official README asks plugin repos to add it):
+Topics — `dsh-plugin` is the one the Harness ecosystem scans for (the official
+README asks plugin repos to add it):
 
 ```
-dsh-plugin  dsh  deepseek-harness  persona  cordis
+dsh-plugin  dsh  deepseek-harness  persona  cordis  system-prompt
 ```
 
-## 3. What ships and what does not
+## 3. The two JB seeds — the call was made on 2026-10-12 and is closed
 
-| file | in the repo | notes |
-|---|---|---|
-| `personas/jb.md` | **yes** | the example JB persona |
-| `personas/terse.md`, `personas/_selftest.md` | yes | neutral examples |
-| `personas/jb_full.md` | **no** | 84 KB variant; removed from the tip *and* from every earlier commit on 2026-10-12 (`git filter-branch` + `--force` push) |
+Two JB persona files ever existed. Exactly one of them is public:
+
+| file | size | ships? | why |
+|---|---:|---|---|
+| `personas/jb.md` | 8.0 KB | **yes — in the repo and in the npm tarball** | the example JB persona; the plugin is useless without a working seed |
+| `personas/jb_full.md` | 84 KB | **no — not in the tip, not in any commit, not in the tarball** | personal long variant; purged from history on 2026-10-12 (`git filter-branch` + `--force` push) |
+
+Verified on the public repo (2026-10-17):
+
+```console
+$ git ls-tree -r HEAD --name-only | grep personas
+personas/_selftest.md
+personas/jb.md
+personas/terse.md
+$ git rev-list --all --objects | grep -c jb_full
+0
+$ curl -o /dev/null -s -w '%{http_code}\n' \
+    https://raw.githubusercontent.com/sorbitol25/dsh-persona-switch/main/personas/jb_full.md
+404
+```
 
 `jb_full.md` is guarded twice so it cannot come back by accident: `.gitignore`
 (tracked, documents the rule) and `.git/info/exclude` (local). If you ever add a
