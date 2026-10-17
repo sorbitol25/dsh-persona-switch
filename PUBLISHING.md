@@ -169,6 +169,27 @@ through a throwaway profile clone. Quit the app fully (tray too) afterwards.
 - [ ] a clean profile installs by name: `dsh plugin --profile <new> add dsh-persona-switch`
 - [ ] desktop: `scripts/install-desktop.ps1 -Version <version>`, restart, `/` lists `persona`
 
+## 4b. What actually happened on 2026-10-17 (the first publish)
+
+1. `npm login` (browser) → `npm whoami` = `sorbitol49`.
+2. `npm publish` → **403**: `Two-factor authentication or granular access token with
+   bypass 2fa enabled is required to publish packages`.
+3. `npm profile get` → **`"tfa": false`**. npm requires 2FA *enabled* (or a bypass token);
+   enabling it asks for the account password, and token creation (`npm token create`,
+   `POST /-/npm/v1/tokens`) answers `"password" is required` too.
+4. First granular token (package:write, 7-day expiry) → still 403, because
+   `GET /-/npm/v1/tokens` reported **`"bypass_2fa": false`** for it.
+5. Second granular token with **Bypass 2FA** enabled → `npm publish` answered
+   **202 + "Your package is being processed"**; the registry served a placeholder for
+   ~60 s and then `version = 0.1.0`, `dist-tags.latest = 0.1.0`, shasum matching the
+   local tarball.
+6. `publish.ps1` reported FAILED at that moment because it read `npm view` once — fixed
+   by polling (24 × 5 s). `git tag v0.1.0` was created afterwards and pushed.
+
+So the rule of thumb: **2FA-on or a bypass token**; if neither, the password is the only
+way in (and it never leaves your machine — `scripts/enable-2fa-and-publish.mjs` asks for
+it locally, derives TOTP itself, and can then publish unattended).
+
 ## 5. Version compatibility
 
 The plugin declares **no** `peerDependencies` on `@deepseek-ai/*` on purpose:

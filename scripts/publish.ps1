@@ -68,13 +68,20 @@ try {
       }
     }
 
-    # 7. the registry is the source of truth, not the exit code: a 403 (2FA) must not tag a release
-    $live = (& npm view "$name@$version" version 2>$null | Out-String).Trim()
+    # 7. the registry is the source of truth, not the exit code: a 403 (2FA) must not tag a release.
+    #    npm now answers 202 and processes the upload asynchronously ("Your package is being
+    #    processed and may take a few minutes"), so poll instead of reading npm view once.
+    $live = ''
+    for ($i = 0; $i -lt 24; $i++) {
+      $live = (& npm view "$name@$version" version 2>$null | Out-String).Trim()
+      if ($live -eq $version) { break }
+      Start-Sleep -Seconds 5
+    }
     if ($publishExit -ne 0 -or $live -ne $version) {
-      "`npublish   FAILED (exit $publishExit, registry says '$live')"
+      "`npublish   FAILED (exit $publishExit, registry says '$live' after ~2 min)"
       "          nothing was tagged. Fix the cause and re-run:"
-      "          403 ... 2FA is required  ->  scripts\publish.ps1 -Otp <6 digits>"
-      "          or use a granular access token with 'bypass 2FA' in %USERPROFILE%\.npmrc"
+      "          403 ... 2FA is required  ->  scripts\publish.ps1 -Otp <6 digits>, or a granular"
+      "          access token with 'bypass 2FA' enabled in %USERPROFILE%\.npmrc"
       exit 1
     }
     npm view $name version dist.tarball time.modified
