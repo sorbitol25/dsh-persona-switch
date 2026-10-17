@@ -1,6 +1,7 @@
 # dsh-persona-switch
 
 [![npm](https://img.shields.io/npm/v/dsh-persona-switch.svg)](https://www.npmjs.com/package/dsh-persona-switch)
+[![github](https://img.shields.io/badge/github-sorbitol25%2Fdsh--persona--switch-181717?logo=github)](https://github.com/sorbitol25/dsh-persona-switch)
 [![dsh-plugin](https://img.shields.io/badge/topic-dsh--plugin-blue)](https://github.com/topics/dsh-plugin)
 [![license MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![verified dsh 0.2.0-rc.2 + 0.2.1-rc.1](https://img.shields.io/badge/verified%20against-dsh%200.2.0--rc.2%20%2F%200.2.1--rc.1-informational)](#proof)

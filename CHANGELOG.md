@@ -1,6 +1,18 @@
 # Changelog
 
-## 0.1.0 — 2026-10-17 (published to npm)
+## 0.1.1 — 2026-10-17
+
+Docs and packaging only — `lib/index.js` is byte-identical to 0.1.0.
+
+- The repository is **public**: <https://github.com/sorbitol25/dsh-persona-switch>
+  (`homepage` on npm points there; topics: dsh-plugin, dsh, deepseek-harness, persona, cordis, system-prompt).
+- README: npm + GitHub badges, npm-first install, desktop exception.
+- `scripts/`: `install-desktop.ps1` (reserved profile installer with clone verification),
+  `publish.ps1` (tests → tarball check → publish → poll the registry → tag),
+  `enable-2fa-and-publish.mjs` (TOTP driver for accounts without 2FA).
+- CI (`/.github/workflows/test.yml`) is still **not pushable**: the classic PAT has the
+  `repo` scope only, and GitHub rejects the whole push with
+  `refusing to allow a Personal Access Token to create or update workflow … without 'workflow' scope`.
 
 `npm i -g` is not the point: `dsh plugin --profile <p> add dsh-persona-switch` installs
 `dsh-persona-switch@0.1.0` from the public registry, tarball shasum
