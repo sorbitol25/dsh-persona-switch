@@ -69,12 +69,23 @@ npm login          # browser + OTP; then:
 npm whoami         # must print your npm username
 ```
 
-Every release:
+Every release (one command, or the five steps by hand):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/publish.ps1 -DryRun   # tests + tarball check, no upload
+powershell -ExecutionPolicy Bypass -File scripts/publish.ps1           # upload + tag + push the tag
+```
+
+What it does, in order: dirty-tree guard → "already published?" guard (E404 = free) →
+`npm whoami` guard → `npm test` → `npm pack --dry-run` (forbids `jb_full.md` / `.git`) →
+`npm publish --access public` → `npm view` verify → `git tag v<version>` → `git push origin v<version>`.
+
+By hand, the same thing:
 
 ```sh
 cd persona-switch
 npm test                       # 30 assertions, no network
-npm pack --dry-run             # confirm: no .git, no jb_full.md, no scripts/
+npm pack --dry-run             # confirm: no .git, no jb_full.md
 npm publish --access public    # publishConfig already says public
 npm view dsh-persona-switch version dist.tarball time.modified
 git tag v0.1.0 && git push --tags
