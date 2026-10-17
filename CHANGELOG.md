@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.3 — 2026-10-17
+
+Docs and tests only — `lib/index.js` is still byte-identical to 0.1.0.
+
+- README: removed the pre-release line that told readers to check "the metadata to fill
+  in and the call to make about the two JB seeds" (both were settled on 2026-10-12 and
+  executed); corrected the assertion count (26 → 30); the install/upgrade commands now say
+  to pin a version, because a stale pnpm packument can resolve an older release.
+- PUBLISHING: tarball counts refreshed (15 files, 28.7 kB / 79.7 kB unpacked).
+- `test/capture-prompt.mjs`: `--complete on|off` overrides the front-matter, so the
+  `complete: false` row of the proof table can be measured instead of derived.
+
 ## 0.1.2 — 2026-10-17
 
 Docs and packaging only — `lib/index.js` is byte-identical to 0.1.0.

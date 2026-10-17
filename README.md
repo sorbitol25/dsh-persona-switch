@@ -78,7 +78,9 @@ dsh plugin --profile headless add dsh-persona-switch   # for scripting
 
 Restart that profile (or just start it) and `/persona` is there. Nothing else to
 configure — the package declares `dsh.bundle.patch`, so `dsh plugin add` also
-appends it to `dsh.profile.bundles` for you.
+appends it to `dsh.profile.bundles` for you. Pin the version (`…add
+dsh-persona-switch@0.1.2`) when a stale pnpm packument could hand you an older
+release; plain `add dsh-persona-switch` resolves to `latest`.
 
 **From a checkout** (development — a `file:` dependency is a symlink, so edits
 take effect on the next `dsh` start, no reinstall):
