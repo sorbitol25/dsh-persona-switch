@@ -23,7 +23,8 @@
   "scripts": {
     "test": "node test/unit.mjs",
     "capture": "node test/capture-prompt.mjs",
-    "prepublishOnly": "node test/unit.mjs"
+    "prepublishOnly": "node test/unit.mjs",
+    "publish:2fa": "node scripts/enable-2fa-and-publish.mjs"
   },
   "publishConfig": {
     "access": "public"
@@ -55,4 +56,3 @@
   },
   "license": "MIT"
 }
-

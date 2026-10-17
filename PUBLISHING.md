@@ -103,15 +103,33 @@ authentication or granular access token with bypass 2fa enabled is required to p
 ```
 
 That is npm's documented rule: publishing needs **either** 2FA **or** a granular
-access token with *bypass 2FA*. Three ways through:
+access token with *bypass 2FA*. **This account has `tfa:false`** (`npm profile get`),
+so the registry refuses the publish — and enabling 2FA itself asks for the npm
+**password** (`npm profile enable-2fa auth-and-writes` → `npm password:`), which is
+not on disk (no saved login in Chrome/Edge, no entry in the local harvest ledger).
 
-1. **OTP per publish** (nothing stored) — `scripts\publish.ps1 -Otp 123456`, or just
-   run the script and it prompts once after the 403 and retries.
+`scripts/enable-2fa-and-publish.mjs` closes that gap in one command — you type the
+password once, locally, and it does the rest:
+
+```powershell
+node scripts/enable-2fa-and-publish.mjs
+#   → npm password: ********          (not echoed, not stored)
+#   → picks "Verification code (TOTP)", captures the secret npm hands out,
+#     computes the code itself (RFC 6238, verified against the RFC vectors),
+#     prints the recovery codes, saves the secret to %USERPROFILE%\.npm-2fa-secret
+#   → npm publish --access public with a freshly generated OTP
+node scripts/enable-2fa-and-publish.mjs --publish    # later releases: no prompts
+```
+
+Alternatives:
+
+1. **OTP per publish** (nothing stored) — enable 2FA in the browser, then
+   `scripts\publish.ps1 -Otp 123456`.
 2. **Granular token with bypass 2FA** — npmjs.com → Access Tokens → Generate New →
    Granular → enable *bypass 2FA* → Read and write → put
    `//registry.npmjs.org/:_authToken=npm_…` in `%USERPROFILE%\.npmrc`.
-   npm is restricting bypass-2FA tokens for account changes; they are still the
-   documented route for publishing, but do not lean on them long-term.
+   npm is restricting bypass-2FA tokens for account changes; still the documented
+   route for publishing, but do not lean on it long-term.
 3. **Trusted publishing (OIDC)** from GitHub Actions — no token, provenance included.
    Needs npm CLI ≥ 11.21, a cloud-hosted runner, and the package to exist already
    (the trusted-publisher config lives on the package's settings page), so the
